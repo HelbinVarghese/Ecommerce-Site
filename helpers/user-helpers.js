@@ -163,7 +163,7 @@ changeProductQuantity:(details)=>{
                 $inc:{'products.$.quantity':count}
             }
             ).then((response)=>{ 
-                resolve(true);
+                resolve({status:true});
             })
         }
 
@@ -223,11 +223,31 @@ getTotalAmount:(userId)=>{
             }
             
         ]).toArray()
-        console.log(total)
-        resolve(total[0].total)
+        console.log(total,'this is total')
+        if(total.length > 0){
+            resolve(total[0].total)
+        }else{
+            resolve([]);
+        }
+        
        
     })
     
+},
+
+placeOrder:(order,products,total)=>{
+    return new Promise(async(resolve,reject)=>{
+        console.log(order,products,total)
+    })
+},
+
+getCartProductList:(userId)=>{
+    return new Promise (async(resolve,reject)=>{
+        console.log("User Id: "+ userId)
+        let cart=await db.get().collection(collection.CART_COLLECTION).findOne({user:objectId(userId)})
+        console.log(cart)
+        resolve(cart.products)
+    })
 }
 
 }
