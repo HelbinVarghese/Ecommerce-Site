@@ -131,11 +131,11 @@
               <hr>
                            
                 <div class="custom-control custom-radio">
-                  <input name="paymentMethod" value="COD" type="radio" name="Cash on Delivery" class="payment-method" checked required>
+                  <input name="payment-Method" value="COD" type="radio" name="Cash on Delivery" class="payment-method" checked required>
                   <label class="custom-control-label" for="payment">Cash On Delivery</label>
                 </div>
                 <div class="custom-control custom-radio">
-                  <input  name="paymentMethod" value="Online" type="radio" class="payment-method" checked required>
+                  <input  name="payment-Method" value="Online" type="radio" class="payment-method" checked required>
                   <label class="custom-control-label" for="payment">Online Payment</label>
                 </div>
               <hr class="mb-4">
@@ -229,6 +229,9 @@
           data:$('#checkout-form').serialize(),
           success:(response)=>{
             alert(response)
+            if(response.status){
+              location.href='/order-success'
+            }
           }
 
         })
