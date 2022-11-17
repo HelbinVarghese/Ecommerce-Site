@@ -1,8 +1,6 @@
 var db=require('../config/connection')
 var collection=require('../config/collections')
 const bcrypt=require('bcrypt')
-const { response } = require('express')
-const { ORDER_COLLECTION } = require('../config/collections')
 var objectId=require('mongodb').ObjectId
 // const { Collection } = require('mongodb')
 module.exports={
@@ -246,7 +244,7 @@ placeOrder:(order,products,total)=>{
                 address:order.address,
                 pincode:order.pincode,
             },
-            userId:objectId(order.userId),
+            userId:objectId(order.UserId),
             paymentmethod:order['payment-Method'],
             products:products,
             totalamount:total,
@@ -271,55 +269,55 @@ getCartProductList:(userId)=>{
     })
 },
 
-getuserorders:(userId)=>{
+getuserorders:(UserId)=>{
     return new Promise(async(resolve,reject)=>{
-        console.log("order userorders :",userId)
-        let orders = await db.get().collection(collection.ORDER_COLLECTION).find({userId:objectId(userId)}).toArray()
-        console.log("orders : ",orders);
+        console.log("order userorders :",UserId)
+        let orders = await db.get().collection(collection.ORDER_COLLECTION).find({userId:objectId(UserId)}).toArray()
+        console.log("==================================================orders : ",orders);
         resolve(orders)
     })
 },
 
-getOrderProducts:(userID)=>{
-    console.log("order user id"+userID)
-    return new Promise(async(resolve,reject)=>{
-        let orderItems=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
-            {
-                $match:{user:objectId(userID)}
-            },
-            {
-                $unwind:'$products'
-            },
-            {
-                $project:{
-                    item:'$products.item',
-                    quantity:'$products.quantity'
-                }
-            },
+// getOrderProducts:(userID)=>{
+//     console.log("order user id"+userID)
+//     return new Promise(async(resolve,reject)=>{
+//         let orderItems=await db.get().collection(collection.ORDER_COLLECTION).aggregate([
+//             {
+//                 $match:{user:objectId(userID)}
+//             },
+//             {
+//                 $unwind:'$products'
+//             },
+//             {
+//                 $project:{
+//                     item:'$products.item',
+//                     quantity:'$products.quantity'
+//                 }
+//             },
 
-            {
-                $lookup:{
-                    from:collection.Product_collection,
-                    localField:'item',
-                    foreignField:'_id',
-                    as:'product'
-                }
-            },
+//             {
+//                 $lookup:{
+//                     from:collection.Product_collection,
+//                     localField:'item',
+//                     foreignField:'_id',
+//                     as:'product'
+//                 }
+//             },
 
-            {
-                $project:{
-                    item:1,quantity:1,product:{$arrayElemAt:['$product',0]}
-                }
-            }
+//             {
+//                 $project:{
+//                     item:1,quantity:1,product:{$arrayElemAt:['$product',0]}
+//                 }
+//             }
             
-        ]).toArray()
-        console.log(orderItems[0].products)
-        resolve(orderItems)
+//         ]).toArray()
+//         console.log(orderItems[0].products)
+//         resolve(orderItems)
        
-    })
+//     })
 
 
-},
+// },
 
 
 }

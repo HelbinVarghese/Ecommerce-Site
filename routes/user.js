@@ -105,6 +105,7 @@ router.post('/place-order',async(req,res)=>{
   console.log(req.body)
   let products=await userHelpers.getCartProductList(req.body.UserId)
   let totalPrice=await userHelpers.getTotalAmount(req.body.UserId)
+  console.log(req.body,"===================PLace order ==============================");
   userHelpers.placeOrder(req.body,products,totalPrice).then((response)=>{
     res.json({status:true})
   })
